@@ -18,7 +18,7 @@
         <module>tensquare_search</module>
     </modules>
 
-	<!--pom打包方式-->
+	<!--pom222打包方式-->
     <packaging>pom</packaging>
 
     <name>tensquare_parent</name>

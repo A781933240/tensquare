@@ -15,3 +15,7 @@ spring:
     host: 192.168.188.128
   rabbitmq:
     host: 192.168.188.128
+jwt:
+  config:
+    key: tensquare #密钥
+    ttl: 3600000   #1小时后过期

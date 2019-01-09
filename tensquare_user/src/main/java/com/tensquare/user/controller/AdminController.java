@@ -1,22 +1,16 @@
 package com.tensquare.user.controller;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.tensquare.user.pojo.Admin;
 import com.tensquare.user.service.AdminService;
-
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
+import util.JwtUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 /**
  * 控制器层
  * @author Administrator
@@ -30,7 +24,9 @@ public class AdminController {
 	@Autowired
 	private AdminService adminService;
 	
-	
+	@Autowired
+	private JwtUtil jwtUtil;
+
 	/**
 	 * 查询全部数据
 	 * @return
@@ -103,6 +99,24 @@ public class AdminController {
 	public Result delete(@PathVariable String id ){
 		adminService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
+	}
+
+	/**
+	 * 用户登录
+	 */
+	@RequestMapping(value = "/login",method = RequestMethod.POST)
+	public Result login(@RequestBody Admin loginAdmin){
+		Admin admin = adminService.findByloAndLoginname(loginAdmin.getLoginname(), loginAdmin.getPassword());
+		if(admin==null){
+			return new Result(false,StatusCode.LOGINERROR,"登录失败");
+		}
+		//登陆成功,生成token,这里是admin登陆成功，所以直接给予admin的角色
+		String token = jwtUtil.createJWT(admin.getId(), admin.getLoginname(), "admin");
+		//因为前端需要令牌和用户的名字
+		Map<String,Object> map = new HashMap<>();
+		map.put("token",token);
+		map.put("loginName",admin.getLoginname());
+		return new Result(true,StatusCode.OK,"登录成功",map);
 	}
 	
 }

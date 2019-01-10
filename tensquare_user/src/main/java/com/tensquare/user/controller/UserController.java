@@ -184,5 +184,13 @@ public class UserController {
 		map.put("roles","user");
 		return new Result(true,StatusCode.OK,"登陆成功",map);
 	}
-	
+
+	/**
+	 * 更新好友粉丝数和用户关注数
+	 * @return
+	 */
+	@RequestMapping(value = "/{userid}/{friendid}/{x}",method = RequestMethod.PUT)
+	public void updatefanscountandfollowcount(@PathVariable String userid,@PathVariable String friendid,@PathVariable int x){
+		userService.updatefanscountandfollowcount(x,userid,friendid);
+	}
 }

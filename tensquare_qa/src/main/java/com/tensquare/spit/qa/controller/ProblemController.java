@@ -1,5 +1,6 @@
 package com.tensquare.spit.qa.controller;
 
+import com.tensquare.client.LabelClient;
 import com.tensquare.spit.qa.pojo.Problem;
 import com.tensquare.spit.qa.service.ProblemService;
 import entity.PageResult;
@@ -27,7 +28,17 @@ public class ProblemController {
 
 	@Autowired
 	private HttpServletRequest request;
-	
+
+	@Autowired
+    private LabelClient labelClient;
+
+
+	@RequestMapping(value = "/label/{labelId}")
+    public Result findLabelById(@PathVariable String labelId){
+        Result result = labelClient.findById(labelId);
+        return result;
+    }
+
 	/**
 	 * 查询全部数据
 	 * @return
